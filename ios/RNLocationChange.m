@@ -1,13 +1,13 @@
 
 #import "RNLocationChange.h"
 #import <CoreLocation/CLError.h>
-#import <CoreLocation/CLLocationManager.h>
-#import <CoreLocation/CLLocationManagerDelegate.h>
+#import <CoreLocation/CLLocationManager+CLVisitExtensions.h>
 
 @implementation RNLocationChange
 {
     CLLocationManager * locationManager;
-    NSDictionary<NSString *, id> * lastLocationEvent;
+    NSDictionary<NSString *, id> * significantLocationChangeEvent;
+    NSDictionary<NSString *, id> * clVisitEvent;
 }
 
 - (dispatch_queue_t)methodQueue
@@ -17,23 +17,19 @@
 RCT_EXPORT_MODULE()
 
 - (NSArray<NSString *> *)supportedEvents {
-    return @[@"significantLocationChange"];
+    return @[@"significantLocationChange", @"clvisit"];
 }
 
 RCT_EXPORT_METHOD(start) {
     if (!locationManager)
         locationManager = [[CLLocationManager alloc] init];
     
-    //locationManager.desiredAccuracy = kCLLocationAccuracyKilometer;
-    //locationManager.distanceFilter = 50;// meters
     locationManager.delegate = self;
-    
-    if ([locationManager respondsToSelector:@selector(requestAlwaysAuthorization)]) {
-        [locationManager requestAlwaysAuthorization];
-    } else if ([locationManager respondsToSelector:@selector(requestWhenInUseAuthorization)]) {
-        [locationManager requestWhenInUseAuthorization];
-    }
-    
+    locationManager.desiredAccuracy = kCLLocationAccuracyBestForNavigation;
+//    locationManager.distanceFilter = 10.0;
+//    locationManager.headingFilter = 360.0;
+
+    [locationManager startMonitoringVisits];
     [locationManager startMonitoringSignificantLocationChanges];
 }
 
@@ -42,12 +38,14 @@ RCT_EXPORT_METHOD(stop) {
         return;
     
     [locationManager stopMonitoringSignificantLocationChanges];
+    [locationManager stopMonitoringVisits];
 }
 
 - (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations {
     CLLocation* location = [locations lastObject];
     
-    lastLocationEvent = @{
+    significantLocationChangeEvent = @{
+                          @"type": @"significantLocationChange",
                           @"coords": @{
                                   @"latitude": @(location.coordinate.latitude),
                                   @"longitude": @(location.coordinate.longitude),
@@ -60,7 +58,22 @@ RCT_EXPORT_METHOD(stop) {
                           @"timestamp": @([location.timestamp timeIntervalSince1970] * 1000) // in ms
                           };
     
-    [self sendEventWithName:@"significantLocationChange" body:lastLocationEvent];
+    [self sendEventWithName:@"significantLocationChange" body:significantLocationChangeEvent];
+}
+
+- (void)locationManager:(CLLocationManager *)manager didVisit:(CLVisit *)visit {
+    clVisitEvent = @{
+                     @"type": @"clvisit",
+                     @"horizontal_accuracy": @(visit.horizontalAccuracy),
+                     @"arrival_date": @([visit.arrivalDate timeIntervalSince1970] * 1000),
+                     @"departureDate": @([visit.departureDate timeIntervalSince1970] * 1000),
+                     @"coords": @{
+                             @"latitude": @(visit.coordinate.latitude),
+                             @"longitude": @(visit.coordinate.longitude),
+                             },
+                     };
+
+    [self sendEventWithName:@"clvisit" body:clVisitEvent];
 }
 
 @end
