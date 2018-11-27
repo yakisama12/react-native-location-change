@@ -1,14 +1,18 @@
 {
   "name": "react-native-location-change",
   "version": "1.0.0",
-  "description": "",
+  "description": "React native location change",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "repository": {
+    "url": "https://github.com/yakisama12/react-native-location-change"
+  },
   "keywords": [
     "react-native"
   ],
-  "author": "",
-  "license": ""
+  "homepage": "https://github.com/yakisama12/react-native-location-change",
+  "author": "vnil",
+  "license": "MIT"
 }
