@@ -45,7 +45,7 @@ RCT_EXPORT_METHOD(stop) {
     CLLocation* location = [locations lastObject];
     
     significantLocationChangeEvent = @{
-                          @"type": @"significantLocationChange",
+                          @"locationType": @"significantLocationChange",
                           @"coords": @{
                                   @"latitude": @(location.coordinate.latitude),
                                   @"longitude": @(location.coordinate.longitude),
@@ -63,7 +63,7 @@ RCT_EXPORT_METHOD(stop) {
 
 - (void)locationManager:(CLLocationManager *)manager didVisit:(CLVisit *)visit {
     clVisitEvent = @{
-                     @"type": @"clvisit",
+                     @"locationType": @"clvisit",
                      @"horizontal_accuracy": @(visit.horizontalAccuracy),
                      @"arrival_date": @([visit.arrivalDate timeIntervalSince1970] * 1000),
                      @"departureDate": @([visit.departureDate timeIntervalSince1970] * 1000),
