@@ -64,8 +64,8 @@ RCT_EXPORT_METHOD(stop) {
 - (void)locationManager:(CLLocationManager *)manager didVisit:(CLVisit *)visit {
     clVisitEvent = @{
                      @"locationType": @"clvisit",
-                     @"horizontal_accuracy": @(visit.horizontalAccuracy),
-                     @"arrival_date": @([visit.arrivalDate timeIntervalSince1970] * 1000),
+                     @"horizontalAccuracy": @(visit.horizontalAccuracy),
+                     @"arrivalDate": @([visit.arrivalDate timeIntervalSince1970] * 1000),
                      @"departureDate": @([visit.departureDate timeIntervalSince1970] * 1000),
                      @"coords": @{
                              @"latitude": @(visit.coordinate.latitude),
