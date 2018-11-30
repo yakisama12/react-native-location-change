@@ -55,7 +55,6 @@ RCT_EXPORT_METHOD(stop) {
                                   @"heading": @(location.course),
                                   @"speed": @(location.speed),
                                   },
-                          @"timestamp": @([location.timestamp timeIntervalSince1970] * 1000) // in ms
                           };
     
     [self sendEventWithName:@"significantLocationChange" body:significantLocationChangeEvent];
@@ -73,7 +72,7 @@ RCT_EXPORT_METHOD(stop) {
                              },
                      };
 
-    [self sendEventWithName:@"clvisit" body:clVisitEvent];
+//    [self sendEventWithName:@"clvisit" body:clVisitEvent];
 }
 
 @end
