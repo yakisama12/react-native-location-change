@@ -26,6 +26,8 @@ RCT_EXPORT_METHOD(start) {
     
     locationManager.delegate = self;
     locationManager.desiredAccuracy = kCLLocationAccuracyBestForNavigation;
+    locationManager.activityType = CLActivityTypeFitness;
+
 //    locationManager.distanceFilter = 10.0;
 //    locationManager.headingFilter = 360.0;
 
@@ -45,7 +47,6 @@ RCT_EXPORT_METHOD(stop) {
     CLLocation* location = [locations lastObject];
     
     significantLocationChangeEvent = @{
-                          @"locationType": @"significantLocationChange",
                           @"coords": @{
                                   @"latitude": @(location.coordinate.latitude),
                                   @"longitude": @(location.coordinate.longitude),
@@ -61,17 +62,17 @@ RCT_EXPORT_METHOD(stop) {
 }
 
 - (void)locationManager:(CLLocationManager *)manager didVisit:(CLVisit *)visit {
-    clVisitEvent = @{
-                     @"locationType": @"clvisit",
-                     @"horizontalAccuracy": @(visit.horizontalAccuracy),
-                     @"arrivalDate": @([visit.arrivalDate timeIntervalSince1970] * 1000),
-                     @"departureDate": @([visit.departureDate timeIntervalSince1970] * 1000),
-                     @"coords": @{
-                             @"latitude": @(visit.coordinate.latitude),
-                             @"longitude": @(visit.coordinate.longitude),
-                             },
-                     };
-
+//    clVisitEvent = @{
+//                     @"locationType": @"clvisit",
+//                     @"horizontalAccuracy": @(visit.horizontalAccuracy),
+//                     @"arrivalDate": @([visit.arrivalDate timeIntervalSince1970] * 1000),
+//                     @"departureDate": @([visit.departureDate timeIntervalSince1970] * 1000),
+//                     @"coords": @{
+//                             @"latitude": @(visit.coordinate.latitude),
+//                             @"longitude": @(visit.coordinate.longitude),
+//                             },
+//                     };
+//
 //    [self sendEventWithName:@"clvisit" body:clVisitEvent];
 }
 
